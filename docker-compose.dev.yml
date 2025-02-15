@@ -58,6 +58,25 @@ services:
     networks:
       - localnet
 
+  auth-service:
+    container_name: dpmsn_auth_service
+    build:
+      context: ./backend/auth-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "1111:1111"
+    environment:
+      - EUREKA_SERVICE_URL=http://eureka-server:8761/eureka/
+    volumes:
+      - ./backend/auth-service:/app
+      - ~/.m2:/root/.m2
+    command: "mvn spring-boot:run -Dspring.profiles.active=dev"
+    depends_on:
+      eureka-server:
+        condition: service_started
+    networks:
+      - localnet
+
 volumes:
   db:
 
