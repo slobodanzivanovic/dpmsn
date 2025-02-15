@@ -77,6 +77,29 @@ services:
     networks:
       - localnet
 
+  user-service:
+    container_name: dpmsn_user_service
+    build:
+      context: ./backend/user-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "1112:1112"
+    environment:
+      - EUREKA_SERVICE_URL=http://eureka-server:8761/eureka/
+      - DB_USER=dpmsn
+      - DB_PASSWORD=dpmsn
+      - DB_DATABASE=dpmsn_db
+      - DB_HOSTNAME=postgres:5432
+    volumes:
+      - ./backend/user-service:/app
+      - ~/.m2:/root/.m2
+    command: "mvn spring-boot:run -Dspring.profiles.active=dev"
+    depends_on:
+      eureka-server:
+        condition: service_started
+    networks:
+      - localnet
+
 volumes:
   db:
 
