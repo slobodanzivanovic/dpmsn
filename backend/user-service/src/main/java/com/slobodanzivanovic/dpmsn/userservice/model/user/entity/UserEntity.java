@@ -15,14 +15,14 @@ import java.util.Map;
  * Represents a user entity named {@link UserEntity} in the system
  * This entity stores user-related information such as email, password, and personal details
  */
+@Entity
 @Getter
 @Setter
 @SuperBuilder
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "user")
+@EqualsAndHashCode(callSuper = true)
+@Table(name = "users")
 public class UserEntity extends BaseEntity {
 
 	@Id
