@@ -1,0 +1,7 @@
+PROJECT_NAME = "DPMSN Microservices"
+OUTPUT_DIRECTORY = docs
+INPUT = auth-service/src/main/java api-gateway/src/main/java eureka-server/src/main/java user-service/src/main/java
+FILE_PATTERNS = *.java
+RECURSIVE = YES
+GENERATE_HTML = YES
+GENERATE_LATEX = NO
