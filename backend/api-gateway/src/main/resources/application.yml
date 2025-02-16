@@ -11,7 +11,7 @@ spring:
         response-timeout: 60s
 
 server:
-  port: 8080
+  port: 1110
 
 eureka:
   client:

@@ -1,0 +1,265 @@
+{
+	"info": {
+		"_postman_id": "89906947-72ad-4de9-bcea-adebb6a544d1",
+		"name": "Spring Boot Microservices with JWT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41988803"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "admin",
+					"item": [
+						{
+							"name": "Register Admin",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"admin@example.com\",\r\n    \"password\": \"adminpassword\",\r\n    \"firstName\": \"Admin\",\r\n    \"lastName\": \"User\",\r\n    \"phoneNumber\": \"12345678901\",\r\n    \"role\": \"admin\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:1110/api/authentication/users/register",
+									"host": [
+										"localhost"
+									],
+									"port": "1110",
+									"path": [
+										"api",
+										"authentication",
+										"users",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login Admin",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"admin@example.com\",\r\n    \"password\": \"adminpassword\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:1110/api/authentication/users/login",
+									"host": [
+										"localhost"
+									],
+									"port": "1110",
+									"path": [
+										"api",
+										"authentication",
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh Token",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"refreshToken\": \"eyJ0eXAiOiJCZWFyZXIiLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiIxOTkxMmNiZi05YTcxLTQ4YmEtYmU5OS1hNWMwZTFjM2ExZmEiLCJpYXQiOjE3Mzk3MTg3NTEsImV4cCI6MTczOTgwNTE1MSwidXNlcklkIjoiMTY5YjRjMTAtNjgyMC00MTM2LTgwNmMtMjU0MjIxODQwNmYwIn0.pyf4R4Fa6sPDvgZk1K3OVi8NFtDtBAFYgDZ3jrMbFvCdLbUMTx7Fv0AIeKCTINZ8LhotJWJGdytDEHIXag7Y-iN6RXykIn8usOhHhe58AY98BB2yKz5H3YI95rwVtGPe_iSScL0NzflcI-rD-RLtMFhZ_kLUM0uXrHaG6GuT4dmUKG8Wzj7NbkZ1GswTyb-K9q4vh3biNRGj1yapelCAxBdKjL2uG2ZxarSgSqUJAQQkYSegeY0SRleZgsPYAqNA0K31Ph0AbjLteHPWnf7aliZZdWgMMR6TY8zdVlmZR_qepkRL8y5sW-RFH2ny6FYTniGHeRECB7R3zo8I1Suy3g\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:1110/api/authentication/users/refresh-token",
+									"host": [
+										"localhost"
+									],
+									"port": "1110",
+									"path": [
+										"api",
+										"authentication",
+										"users",
+										"refresh-token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout Admin",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"accessToken\": \"eyJ0eXAiOiJCZWFyZXIiLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJmOGRmZjRkZS0yN2ViLTRiNzUtYjk2Yi0zMjU0YTVkYzBhZWQiLCJpYXQiOjE3Mzk3MTg3NzEsImV4cCI6MTczOTcyMDU3MSwidXNlclN0YXR1cyI6IkFDVElWRSIsInVzZXJMYXN0TmFtZSI6IlVzZXIiLCJ1c2VyUGhvbmVOdW1iZXIiOiIxMjM0NTY3ODkwMSIsInVzZXJFbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwidXNlclR5cGUiOiJBRE1JTiIsInVzZXJGaXJzdE5hbWUiOiJBZG1pbiIsInVzZXJJZCI6IjE2OWI0YzEwLTY4MjAtNDEzNi04MDZjLTI1NDIyMTg0MDZmMCJ9.Tyjl3PvOCAcmCT73qZrs8uNuVdeVgQYM26CZTqjgm17X15R-9Z6TQ4JGTPJkJy4T_P09V4UFYTC80tq7vvfgnnO5ORqNkIkWuukSiBQiVj_4F5qjTaCuiQVB-jl4F3ZVf_lEkwMO07fmVWc6xK76MMy12Z6PyQxnxedTuMuitZAFFdJ52RphXeH5Xz0wcZYub_uxlZCFi-oqjuX1XR14-9hyRMW3phnpG2MXKOHdok6w80k_b0DRmsguozf3vOnC5Tnked88XY5GkOyNX3f5oSpZmILEIrD42bqzPRj0yhz8Phbm4b5tKGM4xrroE8kRNPQoFE-VL9DuhUnLBULTeg\",\r\n    \"refreshToken\": \"eyJ0eXAiOiJCZWFyZXIiLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiIxOTkxMmNiZi05YTcxLTQ4YmEtYmU5OS1hNWMwZTFjM2ExZmEiLCJpYXQiOjE3Mzk3MTg3NTEsImV4cCI6MTczOTgwNTE1MSwidXNlcklkIjoiMTY5YjRjMTAtNjgyMC00MTM2LTgwNmMtMjU0MjIxODQwNmYwIn0.pyf4R4Fa6sPDvgZk1K3OVi8NFtDtBAFYgDZ3jrMbFvCdLbUMTx7Fv0AIeKCTINZ8LhotJWJGdytDEHIXag7Y-iN6RXykIn8usOhHhe58AY98BB2yKz5H3YI95rwVtGPe_iSScL0NzflcI-rD-RLtMFhZ_kLUM0uXrHaG6GuT4dmUKG8Wzj7NbkZ1GswTyb-K9q4vh3biNRGj1yapelCAxBdKjL2uG2ZxarSgSqUJAQQkYSegeY0SRleZgsPYAqNA0K31Ph0AbjLteHPWnf7aliZZdWgMMR6TY8zdVlmZR_qepkRL8y5sW-RFH2ny6FYTniGHeRECB7R3zo8I1Suy3g\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:1110/api/authentication/users/logout",
+									"host": [
+										"localhost"
+									],
+									"port": "1110",
+									"path": [
+										"api",
+										"authentication",
+										"users",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "Register User",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"user@example.com\",\r\n    \"password\": \"userpassword\",\r\n    \"firstName\": \"Regular\",\r\n    \"lastName\": \"User\",\r\n    \"phoneNumber\": \"987654321010\",\r\n    \"role\": \"user\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:1110/api/authentication/users/register",
+									"host": [
+										"localhost"
+									],
+									"port": "1110",
+									"path": [
+										"api",
+										"authentication",
+										"users",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login User",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"user@example.com\",\r\n    \"password\": \"userpassword\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:1110/api/authentication/users/login",
+									"host": [
+										"localhost"
+									],
+									"port": "1110",
+									"path": [
+										"api",
+										"authentication",
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh Token",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"refreshToken\": \"eyJ0eXAiOiJCZWFyZXIiLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJmMmMxOGE2Ny03MTZlLTQ3ZTAtYTBiNy1iOTNjYjUxYTkyMWEiLCJpYXQiOjE3Mzk3MjAxNzIsImV4cCI6MTczOTcyMTk3MiwidXNlclN0YXR1cyI6IkFDVElWRSIsInVzZXJMYXN0TmFtZSI6IlVzZXIiLCJ1c2VyUGhvbmVOdW1iZXIiOiI5ODc2NTQzMjEwMTAiLCJ1c2VyRW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwidXNlclR5cGUiOiJVU0VSIiwidXNlckZpcnN0TmFtZSI6IlJlZ3VsYXIiLCJ1c2VySWQiOiJlZDFlMDVlZS1iYWQ0LTRhYTMtOWY4Mi03NTYzNzgxNGVkMDYifQ.CYEKKOo7ajGQ7bAvaiGfm1wL9gm_tJZwVATjdjiAmPi17g8e9--Qc6UudFc-O_edEedndjLrtjo6RZdcX0zR-8pIuRavQ8eyajHd4sC7sg3O2NoI2y1_z2Jeaz2XK69X73DwPv5_Urn7hyv6IyOYqC06uasykruBS5LVZGCPn2VUzpsoPwOrcNgBH9_9i6NvH9lV79IU5Q_MhjU6Y1R-JH2AJE4eDw2txgRBquljSXVLxdPFvGziNamTrqW9YzjYnODLpRfOQoO3n99QbzzMRjH3BH8qQRGsHz1nCd4tCB9NB-DYcbXfOPrj06yi1hfcSS8xIcsEcWUmFnQ2qT0eRQ\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:1110/api/authentication/users/refresh-token",
+									"host": [
+										"localhost"
+									],
+									"port": "1110",
+									"path": [
+										"api",
+										"authentication",
+										"users",
+										"refresh-token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout User",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"accessToken\": \"eyJ0eXAiOiJCZWFyZXIiLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJjZTcyN2NhMS04NDgwLTQ1ZjQtYjY2ZC1mM2FhZDlmMzVhMTciLCJpYXQiOjE3Mzk3MjAxODUsImV4cCI6MTczOTcyMTk4NSwidXNlclN0YXR1cyI6IkFDVElWRSIsInVzZXJMYXN0TmFtZSI6IlVzZXIiLCJ1c2VyUGhvbmVOdW1iZXIiOiI5ODc2NTQzMjEwMTAiLCJ1c2VyRW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwidXNlclR5cGUiOiJVU0VSIiwidXNlckZpcnN0TmFtZSI6IlJlZ3VsYXIiLCJ1c2VySWQiOiJlZDFlMDVlZS1iYWQ0LTRhYTMtOWY4Mi03NTYzNzgxNGVkMDYifQ.K59fWcpMqmmFVwJmfv9Z4wx6woJ_c3_x1CmyvTCekCz6mti1OYrIbVucSr6J4PEJD8YaEq7zpR4P7IaXufitDO8tULX_7diPCRbGlxAJn44_wOWU4JcNArkJkS0hi26W_L6uf5zZzTrLhr2EeiXnhj-5gv-0Kz9TFJ6wH2hl8ZiuVzLWq3Ew8S1vc7F7KFBUvzjoN0OBn_-eTOwQZdJndSMSKKih0QkvqYUIbOxBU23kWM3hC0zMJoNLBRIINjwtUtrrDBrjeF7XnL8riKVrBXmzvG2DYd07_7F_zZyYj9bRhBCIrIJVD8Pa1El2-q5JMaDfsw1Z6LKezOtEoVHWdA\",\r\n    \"refreshToken\": \"eyJ0eXAiOiJCZWFyZXIiLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJmMmMxOGE2Ny03MTZlLTQ3ZTAtYTBiNy1iOTNjYjUxYTkyMWEiLCJpYXQiOjE3Mzk3MjAxNzIsImV4cCI6MTczOTcyMTk3MiwidXNlclN0YXR1cyI6IkFDVElWRSIsInVzZXJMYXN0TmFtZSI6IlVzZXIiLCJ1c2VyUGhvbmVOdW1iZXIiOiI5ODc2NTQzMjEwMTAiLCJ1c2VyRW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwidXNlclR5cGUiOiJVU0VSIiwidXNlckZpcnN0TmFtZSI6IlJlZ3VsYXIiLCJ1c2VySWQiOiJlZDFlMDVlZS1iYWQ0LTRhYTMtOWY4Mi03NTYzNzgxNGVkMDYifQ.CYEKKOo7ajGQ7bAvaiGfm1wL9gm_tJZwVATjdjiAmPi17g8e9--Qc6UudFc-O_edEedndjLrtjo6RZdcX0zR-8pIuRavQ8eyajHd4sC7sg3O2NoI2y1_z2Jeaz2XK69X73DwPv5_Urn7hyv6IyOYqC06uasykruBS5LVZGCPn2VUzpsoPwOrcNgBH9_9i6NvH9lV79IU5Q_MhjU6Y1R-JH2AJE4eDw2txgRBquljSXVLxdPFvGziNamTrqW9YzjYnODLpRfOQoO3n99QbzzMRjH3BH8qQRGsHz1nCd4tCB9NB-DYcbXfOPrj06yi1hfcSS8xIcsEcWUmFnQ2qT0eRQ\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:1110/api/authentication/users/logout",
+									"host": [
+										"localhost"
+									],
+									"port": "1110",
+									"path": [
+										"api",
+										"authentication",
+										"users",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
