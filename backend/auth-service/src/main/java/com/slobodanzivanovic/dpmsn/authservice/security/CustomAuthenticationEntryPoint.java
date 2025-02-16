@@ -33,30 +33,30 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 	/**
 	 * Commences the authentication process by sending an unauthorized error response
 	 *
-	 * @param httpServletRequest the request that resulted in an authentication error
-	 * @param httpServletResponse the response to send back to the client
+	 * @param httpServletRequest      the request that resulted in an authentication error
+	 * @param httpServletResponse     the response to send back to the client
 	 * @param authenticationException the exception that triggered the authentication failure
 	 * @throws IOException if an input or output exception occurs
 	 */
 	@Override
 	public void commence(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-			final AuthenticationException authenticationException) throws IOException {
+						 final AuthenticationException authenticationException) throws IOException {
 
 		httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
 
 		final CustomError customError = CustomError.builder()
-				.header(CustomError.Header.AUTH_ERROR.getName())
-				.httpStatus(HttpStatus.UNAUTHORIZED)
-				.isSuccess(false)
-				.build();
+			.header(CustomError.Header.AUTH_ERROR.getName())
+			.httpStatus(HttpStatus.UNAUTHORIZED)
+			.isSuccess(false)
+			.build();
 
 		final String responseBody = OBJECT_MAPPER
-				.writer(DateFormat.getDateInstance())
-				.writeValueAsString(customError);
+			.writer(DateFormat.getDateInstance())
+			.writeValueAsString(customError);
 
 		httpServletResponse.getOutputStream()
-				.write(responseBody.getBytes());
+			.write(responseBody.getBytes());
 
 	}
 

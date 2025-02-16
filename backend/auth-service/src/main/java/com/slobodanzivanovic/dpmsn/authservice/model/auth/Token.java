@@ -27,7 +27,7 @@ public class Token {
 	 */
 	public static boolean isBearerToken(final String authorizationHeader) {
 		return StringUtils.hasText(authorizationHeader) &&
-				authorizationHeader.startsWith(TOKEN_PREFIX);
+			authorizationHeader.startsWith(TOKEN_PREFIX);
 	}
 
 	/**

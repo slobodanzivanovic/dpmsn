@@ -1,32 +1,23 @@
 package com.slobodanzivanovic.dpmsn.authservice.model.auth;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-
 /**
  * Represents a user named {@link User} in the system
- * This class contains information about the user's identity, contact details, status, and type
+ * This record contains information about the user's identity, contact details, status, and type
  */
-@Getter
-@Setter
-@SuperBuilder
-@NoArgsConstructor
-public class User {
+public record User(
 
-	private String id;
+	String id,
 
-	private String email;
+	String email,
 
-	private String firstName;
+	String firstName,
 
-	private String lastName;
+	String lastName,
 
-	private String phoneNumber;
+	String phoneNumber,
 
-	private String userStatus;
+	String userStatus,
 
-	private String userType;
-
+	String userType
+) {
 }

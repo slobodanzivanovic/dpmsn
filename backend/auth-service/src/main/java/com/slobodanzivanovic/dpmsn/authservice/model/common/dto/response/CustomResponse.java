@@ -32,22 +32,22 @@ public class CustomResponse<T> {
 	 * Default successful response with HTTP OK status and success indicator set to true
 	 */
 	public static final CustomResponse<Void> SUCCESS = CustomResponse.<Void>builder()
-			.httpStatus(HttpStatus.OK)
-			.isSuccess(true)
-			.build();
+		.httpStatus(HttpStatus.OK)
+		.isSuccess(true)
+		.build();
 
 	/**
 	 * Creates a successful response with the provided payload and HTTP OK status
 	 *
-	 * @param <T> Type of the response payload
+	 * @param <T>      Type of the response payload
 	 * @param response Response payload
 	 * @return CustomResponse instance with success status, HTTP OK, and the provided payload
 	 */
 	public static <T> CustomResponse<T> successOf(final T response) {
 		return CustomResponse.<T>builder()
-				.httpStatus(HttpStatus.OK)
-				.isSuccess(true)
-				.response(response)
-				.build();
+			.httpStatus(HttpStatus.OK)
+			.isSuccess(true)
+			.response(response)
+			.build();
 	}
 }

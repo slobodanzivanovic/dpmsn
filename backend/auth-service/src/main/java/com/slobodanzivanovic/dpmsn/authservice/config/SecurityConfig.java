@@ -49,26 +49,26 @@ public class SecurityConfig {
 	/**
 	 * Configures the security filter chain
 	 *
-	 * @param httpSecurity the HttpSecurity to modify
+	 * @param httpSecurity                          the HttpSecurity to modify
 	 * @param customBearerTokenAuthenticationFilter the custom filter for Bearer token authentication
-	 * @param customAuthenticationEntryPoint the custom entry point for authentication errors
+	 * @param customAuthenticationEntryPoint        the custom entry point for authentication errors
 	 * @return the configured security filter chain
 	 * @throws Exception if an error occurs while configuring the filter chain
 	 */
 	@Bean
 	public SecurityFilterChain filterChain(
-			final HttpSecurity httpSecurity,
-			final CustomBearerTokenAuthenticationFilter customBearerTokenAuthenticationFilter,
-			final CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
+		final HttpSecurity httpSecurity,
+		final CustomBearerTokenAuthenticationFilter customBearerTokenAuthenticationFilter,
+		final CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
 		httpSecurity
-				.exceptionHandling(customizer -> customizer.authenticationEntryPoint(customAuthenticationEntryPoint))
-				.cors(customizer -> customizer.configurationSource(corsConfigurationSource()))
-				.csrf(AbstractHttpConfigurer::disable)
-				.authorizeHttpRequests(customizer -> customizer
-						.requestMatchers(HttpMethod.POST, "/api//authentication/**").permitAll()
-						.anyRequest().authenticated())
-				.sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.addFilterBefore(customBearerTokenAuthenticationFilter, BearerTokenAuthenticationFilter.class);
+			.exceptionHandling(customizer -> customizer.authenticationEntryPoint(customAuthenticationEntryPoint))
+			.cors(customizer -> customizer.configurationSource(corsConfigurationSource()))
+			.csrf(AbstractHttpConfigurer::disable)
+			.authorizeHttpRequests(customizer -> customizer
+				.requestMatchers(HttpMethod.POST, "/api/authentication/**").permitAll()
+				.anyRequest().authenticated())
+			.sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+			.addFilterBefore(customBearerTokenAuthenticationFilter, BearerTokenAuthenticationFilter.class);
 		return httpSecurity.build();
 	}
 

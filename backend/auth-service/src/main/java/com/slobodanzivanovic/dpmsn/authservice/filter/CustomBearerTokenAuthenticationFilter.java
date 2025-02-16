@@ -31,16 +31,16 @@ public class CustomBearerTokenAuthenticationFilter extends OncePerRequestFilter 
 	/**
 	 * Filters requests to authenticate using a Bearer token
 	 *
-	 * @param httpServletRequest the HTTP request
+	 * @param httpServletRequest  the HTTP request
 	 * @param httpServletResponse the HTTP response
-	 * @param filterChain the filter chain
+	 * @param filterChain         the filter chain
 	 * @throws ServletException if an error occurs during filtering
-	 * @throws IOException if an I/O error occurs during filtering
+	 * @throws IOException      if an I/O error occurs during filtering
 	 */
 	@Override
 	protected void doFilterInternal(@SuppressWarnings("null") @NonNull final HttpServletRequest httpServletRequest,
-			@SuppressWarnings("null") @NonNull final HttpServletResponse httpServletResponse,
-			@SuppressWarnings("null") @NonNull final FilterChain filterChain) throws ServletException, IOException {
+									@SuppressWarnings("null") @NonNull final HttpServletResponse httpServletResponse,
+									@SuppressWarnings("null") @NonNull final FilterChain filterChain) throws ServletException, IOException {
 
 		log.debug("API Request was secured with Security!");
 
