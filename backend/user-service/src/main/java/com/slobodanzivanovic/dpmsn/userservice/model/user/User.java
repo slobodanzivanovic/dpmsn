@@ -19,20 +19,20 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseDomainModel {
 
-    private String id;
+	private String id;
 
-    private String email;
+	private String email;
 
-    private String firstName;
+	private String firstName;
 
-    private String lastName;
+	private String lastName;
 
-    private String phoneNumber;
+	private String phoneNumber;
 
-    private UserStatus userStatus;
+	private UserStatus userStatus;
 
-    private UserType userType;
+	private UserType userType;
 
-    private String password;
+	private String password;
 
 }
