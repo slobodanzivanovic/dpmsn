@@ -1,7 +1,9 @@
 package com.slobodanzivanovic.dpmsn.authservice.config;
 
-import java.util.List;
-
+import com.slobodanzivanovic.dpmsn.authservice.filter.CustomBearerTokenAuthenticationFilter;
+import com.slobodanzivanovic.dpmsn.authservice.security.CustomAuthenticationEntryPoint;
+import jakarta.ws.rs.HttpMethod;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -16,19 +18,10 @@ import org.springframework.security.oauth2.server.resource.web.authentication.Be
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import com.slobodanzivanovic.dpmsn.authservice.filter.CustomBearerTokenAuthenticationFilter;
-import com.slobodanzivanovic.dpmsn.authservice.security.CustomAuthenticationEntryPoint;
-
-import jakarta.ws.rs.HttpMethod;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Configuration class named {@link SecurityConfig} for Spring Security
- * It sets up security filters, session management, CORS configuration, and password encoding
+ * It sets up security filters, session management, and password encoding
  */
 @Configuration
 @EnableWebSecurity
@@ -62,7 +55,6 @@ public class SecurityConfig {
 		final CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
 		httpSecurity
 			.exceptionHandling(customizer -> customizer.authenticationEntryPoint(customAuthenticationEntryPoint))
-			.cors(customizer -> customizer.configurationSource(corsConfigurationSource()))
 			.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(customizer -> customizer
 				.requestMatchers(HttpMethod.POST, "/api/authentication/**").permitAll()
@@ -70,21 +62,6 @@ public class SecurityConfig {
 			.sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.addFilterBefore(customBearerTokenAuthenticationFilter, BearerTokenAuthenticationFilter.class);
 		return httpSecurity.build();
-	}
-
-	/**
-	 * Configures the CORS settings
-	 *
-	 * @return the CORS configuration source
-	 */
-	private CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("*"));
-		configuration.setAllowedMethods(List.of("*"));
-		configuration.setAllowedHeaders(List.of("*"));
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
 	}
 
 	/**

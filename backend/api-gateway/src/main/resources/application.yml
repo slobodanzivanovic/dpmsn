@@ -3,12 +3,25 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-      httpclient:
-        connect-timeout: 60000
-        response-timeout: 60s
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - Authorization
+              - Content-Type
+              - "*"
+            exposedHeaders:
+              - Authorization
+            allowCredentials: true
+            maxAge: 3600
 
 server:
   port: 1110
