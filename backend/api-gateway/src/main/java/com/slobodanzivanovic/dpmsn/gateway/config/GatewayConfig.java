@@ -18,7 +18,6 @@ public class GatewayConfig {
 
 	private final JwtAuthenticationFilter jwtAuthFilter;
 
-	// Define the list of public endpoints
 	private static final List<String> PUBLIC_ENDPOINTS = List.of(
 		"/api/authentication/users/register",
 		"/api/authentication/users/login",
