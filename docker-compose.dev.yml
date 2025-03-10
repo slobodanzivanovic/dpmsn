@@ -58,6 +58,28 @@ services:
     networks:
       - localnet
 
+  frontend:
+    container_name: dpmsn_frontend
+    depends_on:
+      eurekaserver:
+        condition: service_started
+      apigateway:
+        condition: service_started
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - WATCHPACK_POLLING=1
+    env_file:
+      - ./frontend/.env.development
+    networks:
+      - localnet
+
 volumes:
   db:
 
