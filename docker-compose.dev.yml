@@ -25,6 +25,39 @@ services:
     networks:
       - localnet
 
+  eurekaserver:
+    container_name: dpmsn_eureka_server
+    build:
+      context: ./backend/eurekaserver
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8761:8761"
+    volumes:
+      - ./backend/eurekaserver:/app
+      - ~/.m2:/root/.m2
+    command: "mvn spring-boot:run -Dspring.profiles.active=dev"
+    networks:
+      - localnet
+
+  apigateway:
+    container_name: dpmsn_api_gateway
+    build:
+      context: ./backend/apigateway
+      dockerfile: Dockerfile.dev
+    ports:
+      - "1110:1110"
+    environment:
+      - EUREKA_SERVICE_URL=http://eurekaserver:8761/eureka/
+    volumes:
+      - ./backend/apigateway:/app
+      - ~/.m2:/root/.m2
+    command: "mvn spring-boot:run -Dspring.profiles.active=dev"
+    depends_on:
+      eurekaserver:
+        condition: service_started
+    networks:
+      - localnet
+
 volumes:
   db:
 
