@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:17-alpine
     container_name: dpmsn_postgres
-    restart: always
+    restart: unless-stopped
     env_file:
       - ./db/.env.development
     ports:
@@ -15,7 +15,7 @@ services:
   pgweb:
     image: sosedoff/pgweb
     container_name: dpmsn_pgweb
-    restart: always
+    restart: unless-stopped
     ports:
       - "8081:8081"
     environment:
@@ -52,6 +52,30 @@ services:
       - ./backend/apigateway:/app
       - ~/.m2:/root/.m2
     command: "mvn spring-boot:run -Dspring.profiles.active=dev"
+    depends_on:
+      eurekaserver:
+        condition: service_started
+    networks:
+      - localnet
+
+  core:
+    container_name: dpmsn_core
+    build:
+      context: ./backend/core
+      dockerfile: Dockerfile.dev
+    ports:
+      - "1111:1111"
+      - "5005:5005"
+    environment:
+      - EUREKA_SERVICE_URL=http://eurekaserver:8761/eureka/
+      - DB_USER=dpmsn
+      - DB_PASSWORD=dpmsn
+      - DB_DATABASE=dpmsn_db
+      - DB_HOSTNAME=postgres:5432
+    volumes:
+      - ./backend/core:/app
+      - ~/.m2:/root/.m2
+    command: "mvn spring-boot:run -Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Dspring.profiles.active=dev'"
     depends_on:
       eurekaserver:
         condition: service_started

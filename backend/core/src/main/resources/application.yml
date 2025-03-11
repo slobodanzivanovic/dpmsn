@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: core
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOSTNAME}/${DB_DATABASE}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    show-sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+server:
+  port: 1111
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761/eureka/}
