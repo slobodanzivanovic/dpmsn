@@ -14,7 +14,6 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        format_sql: true
 
   flyway:
     enabled: true
@@ -33,3 +32,10 @@ core:
     token:
       secret-key: ======================DPMSN123=Spring===========================
       expiration: 86400000
+
+logging:
+  level:
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2.client: DEBUG
