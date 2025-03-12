@@ -12,6 +12,10 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
   flyway:
     enabled: true
     baseline-on-migrate: true
@@ -23,3 +27,9 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761/eureka/}
+
+core:
+  jwt:
+    token:
+      secret-key: ======================DPMSN123=Spring===========================
+      expiration: 86400000
