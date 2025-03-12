@@ -1,4 +1,4 @@
-package com.slobodanzivanovic.dpmsn.core.model.common;
+package com.slobodanzivanovic.dpmsn.core.model.common.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,7 +23,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(of = "id")
-public abstract class BaseDomainModel implements Serializable {
+public abstract class BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -49,7 +49,7 @@ public abstract class BaseDomainModel implements Serializable {
 	private String updatedBy;
 
 	@Version
-	@Column(name = "updated_by")
+	@Column(name = "version")
 	private Long version;
 
 }

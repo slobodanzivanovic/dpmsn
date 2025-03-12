@@ -1,6 +1,6 @@
-package com.slobodanzivanovic.dpmsn.core.model.auth;
+package com.slobodanzivanovic.dpmsn.core.model.auth.entity;
 
-import com.slobodanzivanovic.dpmsn.core.model.common.BaseDomainModel;
+import com.slobodanzivanovic.dpmsn.core.model.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -22,7 +22,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-public class User extends BaseDomainModel {
+public class UserEntity extends BaseEntity {
 
 	@NotBlank
 	@Size(min = 3, max = 50)
