@@ -20,4 +20,5 @@ public interface BaseMapper<S, T> {
 	 * @return the list of mapped target objects
 	 */
 	List<T> map(Collection<S> sources);
+	
 }

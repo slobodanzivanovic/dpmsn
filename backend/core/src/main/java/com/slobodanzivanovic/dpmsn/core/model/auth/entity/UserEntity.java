@@ -22,20 +22,18 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "roles")
 public class UserEntity extends BaseEntity {
 
-	@NotBlank
-	@Size(min = 3, max = 50)
-	@Column(name = "username", unique = true, nullable = false)
+	// TODO: add validation for phone number and date
+
+	@Column(name = "username", unique = true, nullable = false, length = 50)
 	private String username;
 
-	@NotBlank
 	@Size(max = 50)
 	@Column(name = "first_name", nullable = false)
 	private String firstName;
 
-	@NotBlank
 	@Size(max = 50)
 	@Column(name = "last_name", nullable = false)
 	private String lastName;

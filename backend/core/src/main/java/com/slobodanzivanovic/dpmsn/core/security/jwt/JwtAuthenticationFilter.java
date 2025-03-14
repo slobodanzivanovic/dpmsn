@@ -45,6 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		if (tokenBlacklistService.isTokenBlacklisted(jwt)) {
 			log.warn("Attempt to use blacklisted token: {}", jwt);
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token has been invalidated");
+			return;
 		}
 
 		try {

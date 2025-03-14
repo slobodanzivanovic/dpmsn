@@ -2,6 +2,7 @@ package com.slobodanzivanovic.dpmsn.core.security;
 
 import com.slobodanzivanovic.dpmsn.core.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -22,6 +23,7 @@ import java.util.List;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
 
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -35,22 +37,32 @@ public class SecurityConfig {
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers("/api/v1/auth/**").permitAll()
-				.requestMatchers("/actuator/**").permitAll() // for rureka/admin monitoring
-				.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // add this...
+				.requestMatchers("/api/v1/test/**").permitAll()
+				.requestMatchers("/login/oauth2/code/**").permitAll()
+				.requestMatchers("/actuator/**").permitAll() // for eureka/admin monitoring
+				.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
 				.requestMatchers("/api/v1/users/**").hasAnyRole("USER", "ADMIN")
 				.requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
 
 				.anyRequest().authenticated()
 			)
-			// TODO: uncomment this when we create OAuth2ClientCOnfig...
-//			.oauth2Login(oauth2 -> oauth2
-//				.authorizationEndpoint(authorization -> authorization
-//					.baseUri("/api/v1/auth/oauth2/authorization")
-//				)
-//				.defaultSuccessUrl("/api/v1/auth/oauth-login", true)
-//				.failureUrl("/api/v1/auth/oauth-login?error=true")
-//			)
+			.oauth2Login(oauth2 -> oauth2
+				.authorizationEndpoint(authorization -> authorization
+					.baseUri("/api/v1/auth/oauth2/authorization")
+				)
+				.redirectionEndpoint(redirection -> redirection
+					.baseUri("/login/oauth2/code/*")
+				)
+				.successHandler((request, response, authentication) -> {
+					log.debug("OAuth authentication successful: {}", authentication.getName());
+					request.getRequestDispatcher("/api/v1/auth/oauth-login").forward(request, response);
+				})
+				.failureHandler((request, response, exception) -> {
+					log.error("OAuth authentication failed: {}", exception.getMessage());
+					response.sendError(401, "Authentication failed: " + exception.getMessage());
+				})
+			)
 			.authenticationProvider(authenticationProvider)
 			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

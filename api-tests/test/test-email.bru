@@ -1,0 +1,19 @@
+meta {
+  name: Test Email
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/api/v1/test/email?to=slobodan.zivanovic@tuta.com
+  body: none
+  auth: none
+}
+
+params:query {
+  to: slobodan.zivanovic@tuta.com
+}
+
+docs {
+  Test the email configuration by sending a test email.
+}

@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TokenBlacklistService {
 
 	// we also can use HashSet here instead of conhashmap but let's stick with this for thread safety
+	// in future we will use redis for this shiat
 	private final Set<String> blacklistedTokens = ConcurrentHashMap.newKeySet();
 
 	public void blacklistToken(String token) {

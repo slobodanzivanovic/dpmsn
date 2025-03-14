@@ -25,6 +25,17 @@ services:
     networks:
       - localnet
 
+  redis:
+    image: redis:7-alpine
+    container_name: dpmsn_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - localnet
+
   eurekaserver:
     container_name: dpmsn_eureka_server
     build:
@@ -66,12 +77,8 @@ services:
     ports:
       - "1111:1111"
       - "5005:5005"
-    environment:
-      - EUREKA_SERVICE_URL=http://eurekaserver:8761/eureka/
-      - DB_USER=dpmsn
-      - DB_PASSWORD=dpmsn
-      - DB_DATABASE=dpmsn_db
-      - DB_HOSTNAME=postgres:5432
+    env_file:
+      - ./backend/core/.env
     volumes:
       - ./backend/core:/app
       - ~/.m2:/root/.m2
@@ -106,6 +113,8 @@ services:
 
 volumes:
   db:
+  redis_data:
+    driver: local
 
 networks:
   localnet:
