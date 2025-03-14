@@ -6,6 +6,12 @@ import com.slobodanzivanovic.dpmsn.core.model.auth.dto.request.VerifyRequest;
 import com.slobodanzivanovic.dpmsn.core.model.auth.dto.response.LoginResponse;
 import com.slobodanzivanovic.dpmsn.core.model.common.dto.CustomResponse;
 import com.slobodanzivanovic.dpmsn.core.service.auth.AuthenticationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Authentication", description = "Authentication API endpoints")
 public class AuthController {
 
 	private final AuthenticationService authenticationService;
@@ -36,6 +43,13 @@ public class AuthController {
 	 * @param loginRequest The login credentials containing identifier (username or email) and password
 	 * @return Response containing JWT token on successful authentication
 	 */
+	@Operation(summary = "Login user", description = "Authenticates a user and returns a JWT token")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Successful authentication",
+			content = @Content(schema = @Schema(implementation = LoginResponse.class))),
+		@ApiResponse(responseCode = "401", description = "Invalid credentials"),
+		@ApiResponse(responseCode = "403", description = "Account not verified")
+	})
 	@PostMapping("/login")
 	public CustomResponse<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
 		LoginResponse response = authenticationService.login(loginRequest);
@@ -55,6 +69,11 @@ public class AuthController {
 	 * @param request The HTTP request containing the JWT token in the Authorization header
 	 * @return Success response after logout
 	 */
+	@Operation(summary = "Logout user", description = "Invalidates the user's JWT token")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Successfully logged out"),
+		@ApiResponse(responseCode = "401", description = "Invalid token")
+	})
 	@PostMapping("/logout")
 	public CustomResponse<Void> logout(HttpServletRequest request) {
 		String authHeader = request.getHeader("Authorization");
@@ -71,6 +90,12 @@ public class AuthController {
 	 * @param registerRequest The registration details
 	 * @return Success response after registration
 	 */
+	@Operation(summary = "Register new user", description = "Creates a new user account and sends verification email")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "201", description = "Account created successfully"),
+		@ApiResponse(responseCode = "400", description = "Invalid input data"),
+		@ApiResponse(responseCode = "409", description = "Username or email already exists")
+	})
 	@PostMapping("/register")
 	public CustomResponse<Void> register(@Valid @RequestBody RegisterRequest registerRequest) {
 		authenticationService.signup(registerRequest);
@@ -86,6 +111,12 @@ public class AuthController {
 	 * @param verifyRequest Request containing email and verification code
 	 * @return Success response after verification
 	 */
+	@Operation(summary = "Verify user account", description = "Verifies a user account using the email verification code")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Account verified successfully"),
+		@ApiResponse(responseCode = "400", description = "Invalid or expired verification code"),
+		@ApiResponse(responseCode = "404", description = "User not found")
+	})
 	@PostMapping("/verify")
 	public CustomResponse<Void> verifyAccount(@Valid @RequestBody VerifyRequest verifyRequest) {
 		authenticationService.verifyUser(verifyRequest.email(), verifyRequest.verificationCode());
@@ -98,6 +129,12 @@ public class AuthController {
 	 * @param email The email to send the verification code to
 	 * @return Success response after sending the verification code
 	 */
+	@Operation(summary = "Resend verification code", description = "Resends the verification code to the user's email")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Verification code sent successfully"),
+		@ApiResponse(responseCode = "400", description = "Account already verified"),
+		@ApiResponse(responseCode = "404", description = "User not found")
+	})
 	@PostMapping("/resend-verification")
 	public CustomResponse<Void> resendVerification(@RequestParam String email) {
 		authenticationService.resendVerificationCode(email);
@@ -110,6 +147,11 @@ public class AuthController {
 	 * @param email The email of the user requesting password reset
 	 * @return Success response after sending the password reset code
 	 */
+	@Operation(summary = "Request password reset", description = "Sends a password reset code to the user's email")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Password reset code sent successfully"),
+		@ApiResponse(responseCode = "404", description = "User not found")
+	})
 	@PostMapping("/request-password-reset")
 	public CustomResponse<Void> requestPasswordReset(@RequestParam String email) {
 		authenticationService.requestPasswordReset(email);
@@ -124,6 +166,12 @@ public class AuthController {
 	 * @param newPassword      The new password
 	 * @return Success response after password reset
 	 */
+	@Operation(summary = "Reset password", description = "Resets the user's password using verification code")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Password reset successfully"),
+		@ApiResponse(responseCode = "400", description = "Invalid or expired verification code"),
+		@ApiResponse(responseCode = "404", description = "User not found")
+	})
 	@PostMapping("/reset-password")
 	public CustomResponse<Void> resetPassword(
 		@RequestParam String email,
@@ -143,6 +191,12 @@ public class AuthController {
 	 * @param authentication The OAuth authentication token from the provider
 	 * @return Response containing JWT token for the authenticated user
 	 */
+	@Operation(summary = "OAuth login callback", description = "Handles OAuth2 authentication callback")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Successful OAuth authentication"),
+		@ApiResponse(responseCode = "401", description = "Authentication failed"),
+		@ApiResponse(responseCode = "500", description = "Error processing OAuth login")
+	})
 	@GetMapping("/oauth-login")
 	public ResponseEntity<CustomResponse<LoginResponse>> oauthLogin(OAuth2AuthenticationToken authentication) {
 		log.debug("OAuth login endpoint called");

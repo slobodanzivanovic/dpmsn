@@ -2,6 +2,10 @@ package com.slobodanzivanovic.dpmsn.core.controller.email;
 
 import com.slobodanzivanovic.dpmsn.core.model.common.dto.CustomResponse;
 import com.slobodanzivanovic.dpmsn.core.service.email.EmailService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/test")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Test", description = "Test endpoints for developmetn purposes")
 public class EmailTestController {
 
 	private final EmailService emailService;
 
+	@Operation(
+		summary = "Test email functionality",
+		description = "Sends a test email to verify email configuration is working correctly"
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Test email sent successfully"),
+		@ApiResponse(responseCode = "500", description = "Failed to send test email")
+	})
 	@PostMapping("/email")
 	public CustomResponse<Void> testEmail(@RequestParam String to) {
 		try {

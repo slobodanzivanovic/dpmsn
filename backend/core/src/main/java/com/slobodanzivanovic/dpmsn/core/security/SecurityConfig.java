@@ -55,7 +55,11 @@ public class SecurityConfig {
 				.requestMatchers("/api/v1/test/**").permitAll()
 				.requestMatchers("/login/oauth2/code/**").permitAll()
 				.requestMatchers("/actuator/**").permitAll() // for eureka/admin monitoring
-				.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+
+				// Swagger UI endpoints
+				.requestMatchers("/v3/api-docs/**").permitAll()
+				.requestMatchers("/swagger-ui/**").permitAll()
+				.requestMatchers("/swagger-ui.html").permitAll()
 
 				.requestMatchers("/api/v1/users/**").hasAnyRole("USER", "ADMIN")
 				.requestMatchers("/api/v1/admin/**").hasRole("ADMIN")

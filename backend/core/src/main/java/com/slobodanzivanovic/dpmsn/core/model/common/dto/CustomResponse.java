@@ -1,6 +1,7 @@
 package com.slobodanzivanovic.dpmsn.core.model.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -14,16 +15,21 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Builder
+@Schema(description = "Standard API response wrapper")
 public class CustomResponse<T> {
 
 	@Builder.Default
+	@Schema(description = "Response timestamp", example = "2023-05-15T10:30:45.123")
 	private LocalDateTime time = LocalDateTime.now();
 
+	@Schema(description = "HTTP status code", example = "OK")
 	private HttpStatus httpStatus;
 
+	@Schema(description = "Success indicator", example = "true")
 	private Boolean isSuccess;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@Schema(description = "Response payload data")
 	private T response;
 
 	/**
