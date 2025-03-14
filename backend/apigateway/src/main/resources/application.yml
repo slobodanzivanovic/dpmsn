@@ -1,6 +1,14 @@
 spring:
   application:
     name: apigateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      httpclient:
+        connect-timeout: 60000
+        response-timeout: 60s
 
 server:
   port: 1110
