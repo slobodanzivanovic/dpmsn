@@ -19,6 +19,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/**
+ * Configuration class for Spring Security settings.
+ * <p>
+ * This class defines the security configuration for the application, including
+ * authentication providers, JWT filters, CORS settings, authorization rules, and
+ * OAuth2 login configuration.
+ * </p>
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -29,6 +37,13 @@ public class SecurityConfig {
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	private final AuthenticationProvider authenticationProvider;
 
+	/**
+	 * Configures the security filter chain.
+	 *
+	 * @param http The HttpSecurity to configure
+	 * @return The configured SecurityFilterChain
+	 * @throws Exception If an error occurs during configuration
+	 */
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
@@ -69,6 +84,11 @@ public class SecurityConfig {
 		return http.build();
 	}
 
+	/**
+	 * Configures Cross-Origin Resource Sharing (CORS).
+	 *
+	 * @return A configured CorsConfigurationSource
+	 */
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();

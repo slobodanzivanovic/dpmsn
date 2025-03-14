@@ -41,6 +41,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Implementation of the AuthenticationService interface.
+ * <p>
+ * This class provides the core authentication functionality including user login,
+ * registration, verification, password management, and OAuth handling.
+ * </p>
+ */
 @Service
 @Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -94,6 +101,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		);
 	}
 
+	/**
+	 * Authenticates a user and generates a JWT token.
+	 * <p>
+	 * Validates credentials, handles brute force protection, and generates
+	 * a JWT token upon successful authentication.
+	 * </p>
+	 *
+	 * @param loginRequest The login request containing credentials
+	 * @return A login response with the JWT token and expiration
+	 * @throws ValidationException     If the login request is invalid
+	 * @throws AuthenticationException If authentication fails
+	 */
 	@Override
 	@Transactional
 	public LoginResponse login(LoginRequest loginRequest) {
@@ -138,6 +157,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		return new LoginResponse(token, expirationTime);
 	}
 
+	/**
+	 * Logs out a user by invalidating their JWT token.
+	 *
+	 * @param token The JWT token to invalidate
+	 * @throws TokenException If the token is invalid
+	 */
 	@Override
 	@Transactional
 	public void logout(String token) {
@@ -150,6 +175,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		log.info("User logged out and token blacklisted");
 	}
 
+	/**
+	 * Registers a new user in the system.
+	 * <p>
+	 * Creates a new user account, assigns the default role, generates
+	 * a verification code, and sends a verification email.
+	 * </p>
+	 *
+	 * @param registerRequest The registration request
+	 * @return The created user entity
+	 * @throws ValidationException            If validation fails
+	 * @throws ResourceAlreadyExistsException If a user with the same username or email exists
+	 */
 	@Override
 	@Transactional
 	public UserEntity signup(RegisterRequest registerRequest) {
@@ -191,6 +228,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		return savedUser;
 	}
 
+	/**
+	 * Verifies a user account using a verification code.
+	 * <p>
+	 * Checks the provided verification code against the stored code,
+	 * validates it hasn't expired, and enables the account if valid.
+	 * </p>
+	 *
+	 * @param email            The email of the account to verify
+	 * @param verificationCode The verification code sent to the user's email
+	 * @throws ResourceNotFoundException If the user is not found
+	 * @throws BusinessException         If the account is already verified or the code has expired
+	 * @throws ValidationException       If the verification code is invalid
+	 */
 	@Override
 	@Transactional
 	public void verifyUser(String email, String verificationCode) {
@@ -217,6 +267,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		log.info("User account verified: {}", email);
 	}
 
+	/**
+	 * Resends the verification code to a user's email.
+	 * <p>
+	 * Generates a new verification code, stores it, and sends it
+	 * to the user's email for account verification.
+	 * </p>
+	 *
+	 * @param email The email to send the verification code to
+	 * @throws ResourceNotFoundException If the user is not found
+	 * @throws BusinessException         If the account is already verified
+	 */
 	@Override
 	@Transactional
 	public void resendVerificationCode(String email) {
@@ -246,6 +307,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		});
 	}
 
+	/**
+	 * Initiates a password reset by sending a verification code.
+	 * <p>
+	 * Generates a verification code, stores it with a short expiration time,
+	 * and sends it to the user's email for password reset.
+	 * </p>
+	 *
+	 * @param email The email of the account to reset the password for
+	 * @throws ResourceNotFoundException If the user is not found
+	 */
 	@Override
 	@Transactional
 	public void requestPasswordReset(String email) {
@@ -271,6 +342,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		});
 	}
 
+	/**
+	 * Resets a user's password using the verification code.
+	 * <p>
+	 * Validates the verification code, checks it hasn't expired,
+	 * and updates the user's password if all checks pass.
+	 * </p>
+	 *
+	 * @param email            The email of the account
+	 * @param verificationCode The verification code sent to the user's email
+	 * @param newPassword      The new password
+	 * @throws ResourceNotFoundException If the user is not found
+	 * @throws BusinessException         If the verification code has expired
+	 * @throws ValidationException       If the verification code is invalid or the password is too weak
+	 */
 	@Override
 	@Transactional
 	public void resetPassword(String email, String verificationCode, String newPassword) {
@@ -297,6 +382,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		log.info("Password reset successful for: {}", email);
 	}
 
+	/**
+	 * Handles authentication via OAuth providers.
+	 * <p>
+	 * Extracts user information from the OAuth authentication token,
+	 * creates or retrieves the user account, and generates a JWT token.
+	 * </p>
+	 *
+	 * @param authentication The OAuth authentication token from the provider
+	 * @return The JWT token for the authenticated user
+	 * @throws OAuthProcessingException If OAuth processing fails
+	 */
 	@Override
 	@Transactional
 	public String handleOAuthLogin(OAuth2AuthenticationToken authentication) {
@@ -345,6 +441,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 	}
 
+	/**
+	 * Scheduled task to clean up expired verification codes.
+	 * <p>
+	 * Runs periodically to find and clear expired verification codes
+	 * from user accounts that have not been verified.
+	 * </p>
+	 */
 	@Scheduled(cron = "0 0 * * * ?")
 	@Transactional
 	public void cleanupExpiredVerificationCodes() {
@@ -365,17 +468,42 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 	}
 
+	/**
+	 * Retrieves a user by email or throws an exception if not found.
+	 *
+	 * @param email The email to look up
+	 * @return The user entity
+	 * @throws ResourceNotFoundException If no user is found with the given email
+	 */
 	private UserEntity getUserByEmailOrThrow(String email) {
 		return userRepository.findByEmail(email)
 			.orElseThrow(() -> new ResourceNotFoundException("User", "email: " + email));
 	}
 
+	/**
+	 * Generates a secure random verification code.
+	 * <p>
+	 * Creates a 6-digit numeric code for account verification or password reset.
+	 * </p>
+	 *
+	 * @return A random 6-digit code as a string
+	 */
 	private String generateSecureRandomCode() {
 		SecureRandom random = new SecureRandom();
 		int code = 100000 + random.nextInt(900000);
 		return String.valueOf(code);
 	}
 
+	/**
+	 * Sends an account verification email to a user.
+	 * <p>
+	 * Creates and sends an HTML email containing the verification code
+	 * and instructions for account verification.
+	 * </p>
+	 *
+	 * @param user The user to send the verification email to
+	 * @throws ExternalServiceException If sending the email fails
+	 */
 	private void sendVerificationEmail(UserEntity user) {
 		String subject = "Please verify your DPMSN account";
 		String htmlMessage = "<html><body>" +
@@ -393,6 +521,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 	}
 
+	/**
+	 * Sends a password reset email to a user.
+	 * <p>
+	 * Creates and sends an HTML email containing the verification code
+	 * and instructions for password reset.
+	 * </p>
+	 *
+	 * @param user The user to send the password reset email to
+	 * @throws ExternalServiceException If sending the email fails
+	 */
 	private void sendPasswordResetEmail(UserEntity user) {
 		String subject = "DPMSN Password Reset";
 		String htmlMessage = "<html><body>" +
@@ -411,6 +549,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 	}
 
+	/**
+	 * Extracts the email address from OAuth2 user data.
+	 * <p>
+	 * Attempts to get the email from the provider-specific attributes.
+	 * </p>
+	 *
+	 * @param oAuth2User The OAuth2 user data
+	 * @param provider   The OAuth provider name
+	 * @return The extracted email or null if not available
+	 */
 	private String extractEmailFromOAuth(OAuth2User oAuth2User, String provider) {
 		String email = null;
 
@@ -428,6 +576,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		return email;
 	}
 
+	/**
+	 * Extracts the name from OAuth2 user data.
+	 * <p>
+	 * Attempts to get the name or username from the provider-specific attributes.
+	 * </p>
+	 *
+	 * @param oAuth2User The OAuth2 user data
+	 * @param provider   The OAuth provider name
+	 * @return The extracted name
+	 * @throws OAuthProcessingException If the provider is not supported
+	 */
 	private String extractNameFromOAuth(OAuth2User oAuth2User, String provider) {
 		if ("google".equals(provider)) {
 			return oAuth2User.getAttribute("name");
@@ -438,6 +597,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 	}
 
+	/**
+	 * Creates a new user from OAuth authentication data.
+	 * <p>
+	 * Generates a username and random password, assigns the default role,
+	 * and enables the account without requiring email verification.
+	 * </p>
+	 *
+	 * @param name     The user's name from OAuth
+	 * @param email    The user's email from OAuth
+	 * @param provider The OAuth provider name
+	 * @return The created user entity
+	 * @throws OAuthProcessingException If user creation fails
+	 */
 	private UserEntity createOAuthUser(String name, String email, String provider) {
 		try {
 			log.debug("Creating OAuth user with name: {} and email: {}", name, email);
@@ -464,6 +636,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 	}
 
+	/**
+	 * Generates a unique username based on the given name.
+	 * <p>
+	 * Sanitizes the name and adds a counter if necessary to ensure uniqueness.
+	 * </p>
+	 *
+	 * @param baseName The name to base the username on
+	 * @return A unique username
+	 */
 	private String generateUniqueUsername(String baseName) {
 		if (baseName == null || baseName.trim().isEmpty()) {
 			baseName = "user";
@@ -485,6 +666,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		return candidate;
 	}
 
+	/**
+	 * Generates a secure random password.
+	 * <p>
+	 * Creates a strong password for OAuth users who don't set their own password.
+	 * </p>
+	 *
+	 * @return A strong random password
+	 */
 	private String generateSecureRandomPassword() {
 		final String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
 		SecureRandom random = new SecureRandom();
@@ -498,6 +687,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	// brute force protection methods
 
+	/**
+	 * Checks if a user account is currently locked out.
+	 * <p>
+	 * Part of the brute force protection mechanism to prevent
+	 * repeated login attempts with wrong credentials.
+	 * </p>
+	 *
+	 * @param identifier The username or email being used for login
+	 * @throws AuthenticationException If the account is locked out
+	 */
 	private void checkLockoutStatus(String identifier) {
 		LocalDateTime lockoutTime = lockoutTimes.get(identifier);
 		if (lockoutTime != null) {
@@ -511,6 +710,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 	}
 
+	/**
+	 * Records a failed login attempt for a user.
+	 * <p>
+	 * Increments the failed attempt counter and applies a lockout
+	 * if the maximum number of attempts is reached.
+	 * </p>
+	 *
+	 * @param identifier The username or email being used for login
+	 */
 	private void recordFailedLoginAttempt(String identifier) {
 		int attempts = loginAttempts.getOrDefault(identifier, 0) + 1;
 		loginAttempts.put(identifier, attempts);
@@ -523,6 +731,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 	}
 
+	/**
+	 * Cleans up expired login attempts and lockout records.
+	 * <p>
+	 * Scheduled task to prevent memory leaks from the login attempt tracking.
+	 * </p>
+	 */
 	private void cleanupLoginAttempts() {
 		lockoutTimes.entrySet().removeIf(entry -> LocalDateTime.now().isAfter(entry.getValue()));
 

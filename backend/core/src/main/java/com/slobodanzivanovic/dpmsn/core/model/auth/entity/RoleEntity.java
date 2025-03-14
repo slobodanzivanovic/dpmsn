@@ -12,6 +12,12 @@ import lombok.experimental.SuperBuilder;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Entity representing a role in the system.
+ * <p>
+ * This entity defines roles that can be assigned to users.
+ * </p>
+ */
 @Entity
 @Table(name = "roles")
 @Data

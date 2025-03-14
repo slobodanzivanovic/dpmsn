@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller for user operations.
+ * NOR FINISHED
+ */
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -21,6 +25,16 @@ public class UserController {
 
 	private final UserMapper userMapper;
 
+	/**
+	 * Get the current authenticated user's information.
+	 * <p>
+	 * Returns information about the currently authenticated user based on
+	 * their JWT token.
+	 * </p>
+	 *
+	 * @param userDetails The current user's details from the security context
+	 * @return The user information
+	 */
 	@GetMapping("/me")
 	public CustomResponse<UserResponse> getCurrentUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
 		UserEntity user = userDetails.user();
@@ -32,5 +46,5 @@ public class UserController {
 			.response(userResponse)
 			.build();
 	}
-	
+
 }

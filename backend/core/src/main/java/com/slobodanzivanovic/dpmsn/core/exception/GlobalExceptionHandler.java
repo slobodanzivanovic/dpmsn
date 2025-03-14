@@ -22,10 +22,30 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Global exception handler for the application.
+ * <p>
+ * This handler catches and processes exceptions thrown throughout the application,
+ * translating them into appropriate HTTP responses with standardized error formats.
+ * It handles various exception types including validation errors, authentication failures,
+ * and business logic exceptions.
+ * </p>
+ */
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
+	/**
+	 * Handle core application exceptions.
+	 * <p>
+	 * Processes exceptions that extend CoreException, extracting relevant information
+	 * and returning a standardized error response.
+	 * </p>
+	 *
+	 * @param ex      The core exception
+	 * @param request The HTTP request
+	 * @return A standardized error response
+	 */
 	@ExceptionHandler(CoreException.class)
 	public ResponseEntity<CustomResponse<Map<String, Object>>> handleCoreException(
 		CoreException ex, HttpServletRequest request) {
@@ -47,6 +67,17 @@ public class GlobalExceptionHandler {
 				.build());
 	}
 
+	/**
+	 * Handle validation exceptions from request body validation.
+	 * <p>
+	 * Processes MethodArgumentNotValidException which occurs when @Valid validation
+	 * fails on a method argument, typically request bodies.
+	 * </p>
+	 *
+	 * @param ex      The validation exception
+	 * @param request The HTTP request
+	 * @return A validation error response with field-specific errors
+	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<CustomResponse<Map<String, Object>>> handleValidationExceptions(
 		MethodArgumentNotValidException ex, HttpServletRequest request) {
@@ -79,6 +110,17 @@ public class GlobalExceptionHandler {
 				.build());
 	}
 
+	/**
+	 * Handle constraint violation exceptions.
+	 * <p>
+	 * Processes ConstraintViolationException which occurs when bean validation
+	 * constraints are violated.
+	 * </p>
+	 *
+	 * @param ex      The constraint violation exception
+	 * @param request The HTTP request
+	 * @return A validation error response with constraint-specific errors
+	 */
 	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<CustomResponse<Map<String, Object>>> handleConstraintViolationException(
 		ConstraintViolationException ex, HttpServletRequest request) {
@@ -105,6 +147,16 @@ public class GlobalExceptionHandler {
 				.build());
 	}
 
+	/**
+	 * Handle not found exceptions.
+	 * <p>
+	 * Processes exceptions related to resources not being found in the system.
+	 * </p>
+	 *
+	 * @param ex      The not found exception
+	 * @param request The HTTP request
+	 * @return A not found error response
+	 */
 	@ExceptionHandler({
 		EntityNotFoundException.class,
 		UsernameNotFoundException.class
@@ -129,6 +181,17 @@ public class GlobalExceptionHandler {
 				.build());
 	}
 
+	/**
+	 * Handle authentication exceptions.
+	 * <p>
+	 * Processes exceptions related to authentication failures such as
+	 * invalid credentials or disabled accounts.
+	 * </p>
+	 *
+	 * @param ex      The authentication exception
+	 * @param request The HTTP request
+	 * @return An authentication error response
+	 */
 	@ExceptionHandler({
 		BadCredentialsException.class,
 		DisabledException.class,
@@ -168,6 +231,17 @@ public class GlobalExceptionHandler {
 				.build());
 	}
 
+	/**
+	 * Handle type mismatch exceptions.
+	 * <p>
+	 * Processes exceptions that occur when the type of a method argument
+	 * does not match the expected type.
+	 * </p>
+	 *
+	 * @param ex      The type mismatch exception
+	 * @param request The HTTP request
+	 * @return A type mismatch error response
+	 */
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<CustomResponse<Map<String, Object>>> handleTypeMismatchException(
 		MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
@@ -190,6 +264,17 @@ public class GlobalExceptionHandler {
 				.build());
 	}
 
+	/**
+	 * Handle all other unhandled exceptions.
+	 * <p>
+	 * Acts as a catch-all for any exceptions not specifically handled
+	 * by other exception handlers.
+	 * </p>
+	 *
+	 * @param ex      The exception
+	 * @param request The HTTP request
+	 * @return A generic error response
+	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<CustomResponse<Map<String, Object>>> handleGenericException(
 		Exception ex, HttpServletRequest request) {

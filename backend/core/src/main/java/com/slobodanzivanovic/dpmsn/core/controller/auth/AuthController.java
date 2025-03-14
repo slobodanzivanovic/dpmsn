@@ -15,6 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * REST controller for authentication operations.
+ * <p>
+ * This controller handles authentication-related endpoints including login, logout,
+ * registration, account verification, password reset, and OAuth login processing.
+ * </p>
+ */
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -23,6 +30,12 @@ public class AuthController {
 
 	private final AuthenticationService authenticationService;
 
+	/**
+	 * Process user login.
+	 *
+	 * @param loginRequest The login credentials containing identifier (username or email) and password
+	 * @return Response containing JWT token on successful authentication
+	 */
 	@PostMapping("/login")
 	public CustomResponse<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
 		LoginResponse response = authenticationService.login(loginRequest);
@@ -33,6 +46,15 @@ public class AuthController {
 			.build();
 	}
 
+	/**
+	 * Process user logout.
+	 * <p>
+	 * Invalidates the user's JWT token by adding it to the blacklist.
+	 * </p>
+	 *
+	 * @param request The HTTP request containing the JWT token in the Authorization header
+	 * @return Success response after logout
+	 */
 	@PostMapping("/logout")
 	public CustomResponse<Void> logout(HttpServletRequest request) {
 		String authHeader = request.getHeader("Authorization");
@@ -43,6 +65,12 @@ public class AuthController {
 		return CustomResponse.SUCCESS;
 	}
 
+	/**
+	 * Register a new user.
+	 *
+	 * @param registerRequest The registration details
+	 * @return Success response after registration
+	 */
 	@PostMapping("/register")
 	public CustomResponse<Void> register(@Valid @RequestBody RegisterRequest registerRequest) {
 		authenticationService.signup(registerRequest);
@@ -52,24 +80,50 @@ public class AuthController {
 			.build();
 	}
 
+	/**
+	 * Verify a user account using a verification code.
+	 *
+	 * @param verifyRequest Request containing email and verification code
+	 * @return Success response after verification
+	 */
 	@PostMapping("/verify")
 	public CustomResponse<Void> verifyAccount(@Valid @RequestBody VerifyRequest verifyRequest) {
 		authenticationService.verifyUser(verifyRequest.email(), verifyRequest.verificationCode());
 		return CustomResponse.SUCCESS;
 	}
 
+	/**
+	 * Resend verification code to a user's email.
+	 *
+	 * @param email The email to send the verification code to
+	 * @return Success response after sending the verification code
+	 */
 	@PostMapping("/resend-verification")
 	public CustomResponse<Void> resendVerification(@RequestParam String email) {
 		authenticationService.resendVerificationCode(email);
 		return CustomResponse.SUCCESS;
 	}
 
+	/**
+	 * Request a password reset for a user.
+	 *
+	 * @param email The email of the user requesting password reset
+	 * @return Success response after sending the password reset code
+	 */
 	@PostMapping("/request-password-reset")
 	public CustomResponse<Void> requestPasswordReset(@RequestParam String email) {
 		authenticationService.requestPasswordReset(email);
 		return CustomResponse.SUCCESS;
 	}
 
+	/**
+	 * Reset a user's password using a verification code.
+	 *
+	 * @param email            The user's email
+	 * @param verificationCode The verification code sent to the user's email
+	 * @param newPassword      The new password
+	 * @return Success response after password reset
+	 */
 	@PostMapping("/reset-password")
 	public CustomResponse<Void> resetPassword(
 		@RequestParam String email,
@@ -79,6 +133,16 @@ public class AuthController {
 		return CustomResponse.SUCCESS;
 	}
 
+	/**
+	 * Handle OAuth login redirection.
+	 * <p>
+	 * This endpoint is called after successful OAuth authentication to generate
+	 * a JWT token for the authenticated user.
+	 * </p>
+	 *
+	 * @param authentication The OAuth authentication token from the provider
+	 * @return Response containing JWT token for the authenticated user
+	 */
 	@GetMapping("/oauth-login")
 	public ResponseEntity<CustomResponse<LoginResponse>> oauthLogin(OAuth2AuthenticationToken authentication) {
 		log.debug("OAuth login endpoint called");
@@ -114,5 +178,5 @@ public class AuthController {
 					.build());
 		}
 	}
-	
+
 }

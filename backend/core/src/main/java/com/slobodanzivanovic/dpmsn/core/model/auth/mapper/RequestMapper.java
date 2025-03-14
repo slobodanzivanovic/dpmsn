@@ -9,6 +9,9 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+/**
+ * Mapper for converting registration requests to user entities.
+ */
 @Mapper(componentModel = "spring")
 public abstract class RequestMapper implements BaseMapper<RegisterRequest, UserEntity> {
 
@@ -36,5 +39,5 @@ public abstract class RequestMapper implements BaseMapper<RegisterRequest, UserE
 	protected String encodePassword(String password) {
 		return passwordEncoder.encode(password);
 	}
-	
+
 }

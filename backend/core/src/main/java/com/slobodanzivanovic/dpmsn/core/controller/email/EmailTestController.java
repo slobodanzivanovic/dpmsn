@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controller for testing email functionality.
+ */
 @RestController
 @RequestMapping("/api/v1/test")
 @RequiredArgsConstructor
@@ -36,5 +39,5 @@ public class EmailTestController {
 			throw new RuntimeException("Failed to send email", e);
 		}
 	}
-	
+
 }

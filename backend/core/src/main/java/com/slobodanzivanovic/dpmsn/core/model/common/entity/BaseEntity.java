@@ -17,6 +17,14 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Base entity class providing common fields for all database entities.
+ * <p>
+ * This abstract class provides common attributes and functionality for all entities
+ * in the system, including ID generation, auditing fields (creation and update timestamps
+ * and users), and optimistic locking support.
+ * </p>
+ */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @Data

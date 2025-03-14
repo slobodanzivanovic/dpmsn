@@ -8,6 +8,13 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
+/**
+ * Configuration class for email functionality.
+ * <p>
+ * This class provides configuration for the JavaMailSender which is used
+ * to send emails from the application.
+ * </p>
+ */
 @Configuration
 public class EmailConfig {
 
@@ -17,6 +24,15 @@ public class EmailConfig {
 	@Value("${core.mail.password}")
 	private String emailPassword;
 
+	/**
+	 * Configures and provides a JavaMailSender instance.
+	 * <p>
+	 * Sets up the mail server connection properties including host, port,
+	 * authentication, TLS, and timeout settings.
+	 * </p>
+	 *
+	 * @return A configured JavaMailSender instance
+	 */
 	@Bean
 	public JavaMailSender javaMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();

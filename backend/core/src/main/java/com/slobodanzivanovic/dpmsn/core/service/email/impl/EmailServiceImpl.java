@@ -9,6 +9,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of the EmailService interface.
+ * <p>
+ * This class provides the concrete implementation for sending emails to users
+ * using Spring JavaMailSender.
+ * </p>
+ */
 @Service
 public class EmailServiceImpl implements EmailService {
 
@@ -18,6 +25,18 @@ public class EmailServiceImpl implements EmailService {
 	@Value("${core.mail.username}")
 	private String fromEmail;
 
+	/**
+	 * Sends a verification email to a user.
+	 * <p>
+	 * Creates and sends an HTML email to the specified recipient with the given subject and content.
+	 * Used for account verification, password reset, and other notification purposes.
+	 * </p>
+	 *
+	 * @param to      The recipient email address
+	 * @param subject The email subject
+	 * @param text    The email content in HTML format
+	 * @throws MessagingException If sending the email fails
+	 */
 	public void sendVerificationEmail(String to, String subject, String text) throws MessagingException {
 		MimeMessage message = emailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);

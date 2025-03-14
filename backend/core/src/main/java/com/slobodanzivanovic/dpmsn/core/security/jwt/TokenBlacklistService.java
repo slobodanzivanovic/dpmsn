@@ -7,8 +7,12 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * TODO:
- *  in a prod environment, this should be backed by redis or another distributed cache
+ * Service for managing blacklisted JWT tokens.
+ * <p>
+ * This service maintains a list of invalidated tokens to prevent their reuse.
+ * In a production environment, this should be backed by a distributed cache like Redis
+ * to ensure blacklist consistency across multiple application instances.
+ * </p>
  */
 @Service
 @Slf4j
@@ -18,11 +22,25 @@ public class TokenBlacklistService {
 	// in future we will use redis for this shiat
 	private final Set<String> blacklistedTokens = ConcurrentHashMap.newKeySet();
 
+	/**
+	 * Adds a token to the blacklist.
+	 * <p>
+	 * Once a token is blacklisted, it will no longer be accepted for authentication.
+	 * </p>
+	 *
+	 * @param token The JWT token to blacklist
+	 */
 	public void blacklistToken(String token) {
 		blacklistedTokens.add(token);
 		log.debug("Token blacklisted: {}, Total blacklisted tokens: {}", token, blacklistedTokens.size());
 	}
 
+	/**
+	 * Checks if a token is blacklisted.
+	 *
+	 * @param token The JWT token to check
+	 * @return true if the token is blacklisted, false otherwise
+	 */
 	public boolean isTokenBlacklisted(String token) {
 		return blacklistedTokens.contains(token);
 	}

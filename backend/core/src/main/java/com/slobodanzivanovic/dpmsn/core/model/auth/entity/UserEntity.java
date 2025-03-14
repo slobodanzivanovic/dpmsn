@@ -16,6 +16,13 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Entity representing a user in the system.
+ * <p>
+ * This entity stores user account information including authentication details,
+ * personal information, verification status, and role assignments.
+ * </p>
+ */
 @Entity
 @Table(name = "users")
 @Data

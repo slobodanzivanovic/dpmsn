@@ -4,6 +4,17 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+/**
+ * DTO for user registration requests.
+ * <p>
+ * This record contains the essential information required to register a new user
+ * in the system. Additional user details may be added after registration.
+ * </p>
+ *
+ * @param username Desired username for the new user
+ * @param email    Email address for the new user
+ * @param password Password for the new user account
+ */
 public record RegisterRequest(
 
 	@NotBlank

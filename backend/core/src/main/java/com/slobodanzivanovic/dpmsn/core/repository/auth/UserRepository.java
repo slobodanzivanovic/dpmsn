@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Repository for accessing and manipulating user data.
+ */
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 

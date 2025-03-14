@@ -8,6 +8,12 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 
+/**
+ * Configuration class for OAuth2 client integration.
+ * <p>
+ * This class provides configuration for OAuth2 authentication.
+ * </p>
+ */
 @Configuration
 public class OAuth2ClientConfig {
 
@@ -23,6 +29,14 @@ public class OAuth2ClientConfig {
 	@Value("${oauth2.client.github.client-secret}")
 	private String githubClientSecret;
 
+	/**
+	 * Configures and provides the ClientRegistrationRepository.
+	 * <p>
+	 * This repository holds the client registrations for different OAuth2 providers.
+	 * </p>
+	 *
+	 * @return A configured ClientRegistrationRepository containing all supported OAuth2 providers
+	 */
 	@Bean
 	public ClientRegistrationRepository clientRegistrationRepository() {
 		return new InMemoryClientRegistrationRepository(
@@ -31,6 +45,11 @@ public class OAuth2ClientConfig {
 		);
 	}
 
+	/**
+	 * Creates a client registration for Google OAuth2 authentication.
+	 *
+	 * @return A configured ClientRegistration for Google
+	 */
 	private ClientRegistration googleClientRegistration() {
 		return ClientRegistration.withRegistrationId("google")
 			.clientId(googleClientId)
@@ -47,7 +66,15 @@ public class OAuth2ClientConfig {
 			.build();
 	}
 
-	// TODO: check this flow because if user dont set email on github it will fail...
+	/**
+	 * Creates a client registration for GitHub OAuth2 authentication.
+	 * <p>
+	 * Note: GitHub may not always return email information directly, which may
+	 * require additional API calls to retrieve user emails.
+	 * </p>
+	 *
+	 * @return A configured ClientRegistration for GitHub
+	 */
 	private ClientRegistration githubClientRegistration() {
 		return ClientRegistration.withRegistrationId("github")
 			.clientId(githubClientId)
@@ -62,5 +89,5 @@ public class OAuth2ClientConfig {
 			.userNameAttributeName("login")
 			.build();
 	}
-	
+
 }

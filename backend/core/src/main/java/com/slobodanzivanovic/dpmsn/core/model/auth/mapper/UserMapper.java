@@ -10,6 +10,9 @@ import org.mapstruct.Named;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Mapper for converting user entities to user response DTOs.
+ */
 @Mapper(componentModel = "spring")
 public interface UserMapper extends BaseMapper<UserEntity, UserResponse> {
 
@@ -26,5 +29,5 @@ public interface UserMapper extends BaseMapper<UserEntity, UserResponse> {
 			.map(role -> role.getName())
 			.collect(Collectors.toSet());
 	}
-	
+
 }
