@@ -29,6 +29,9 @@ public class OAuth2ClientConfig {
 	@Value("${oauth2.client.github.client-secret}")
 	private String githubClientSecret;
 
+	@Value("${oauth2.redirect-uri-base}")
+	private String redirectUriBase;
+
 	/**
 	 * Configures and provides the ClientRegistrationRepository.
 	 * <p>
@@ -58,7 +61,7 @@ public class OAuth2ClientConfig {
 			.authorizationUri("https://accounts.google.com/o/oauth2/auth")
 			.tokenUri("https://oauth2.googleapis.com/token")
 			.clientName("Google")
-			.redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
+			.redirectUri(redirectUriBase + "/login/oauth2/code/{registrationId}")
 			.jwkSetUri("https://www.googleapis.com/oauth2/v3/certs")
 			.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
 			.userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")
@@ -84,7 +87,7 @@ public class OAuth2ClientConfig {
 			.tokenUri("https://github.com/login/oauth/access_token")
 			.userInfoUri("https://api.github.com/user")
 			.clientName("GitHub")
-			.redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
+			.redirectUri(redirectUriBase + "/login/oauth2/code/{registrationId}")
 			.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
 			.userNameAttributeName("login")
 			.build();

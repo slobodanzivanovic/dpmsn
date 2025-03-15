@@ -26,6 +26,8 @@ public class GatewayConfig {
 		"/api/v1/auth/request-password-reset",
 		"/api/v1/auth/reset-password",
 		"/api/v1/auth/oauth-login",
+		"/api/v1/auth/oauth2/authorization/**",
+		"/login/oauth2/code/**",
 		"/api/v1/test/**",
 		"/v3/api-docs/**",
 		"/swagger-ui/**",
@@ -36,6 +38,11 @@ public class GatewayConfig {
 	@Bean
 	public RouteLocator routes(RouteLocatorBuilder builder) {
 		return builder.routes()
+			.route("oauth-callback", r -> r.path("/login/oauth2/code/**")
+				.filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthenticationFilter.Config()
+					.setPublicEndpoints(List.of("/login/oauth2/code/**")))))
+				.uri("lb://core"))
+
 			.route("core-service", r -> r.path("/api/v1/**")
 				.filters(f -> f.filter(jwtAuthFilter.apply(new JwtAuthenticationFilter.Config()
 					.setPublicEndpoints(PUBLIC_ENDPOINTS))))
