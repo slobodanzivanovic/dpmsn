@@ -5,6 +5,7 @@ import com.slobodanzivanovic.dpmsn.core.model.auth.dto.request.RegisterRequest;
 import com.slobodanzivanovic.dpmsn.core.model.auth.dto.request.VerifyRequest;
 import com.slobodanzivanovic.dpmsn.core.model.auth.dto.response.LoginResponse;
 import com.slobodanzivanovic.dpmsn.core.model.common.dto.CustomResponse;
+import com.slobodanzivanovic.dpmsn.core.security.jwt.JwtService;
 import com.slobodanzivanovic.dpmsn.core.service.auth.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +39,8 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
 	private final AuthenticationService authenticationService;
+	private final JwtService jwtService;
+	private final UserDetailsService userDetailsService;
 
 	/**
 	 * Process user login.
@@ -230,6 +235,41 @@ public class AuthController {
 					.httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 					.isSuccess(false)
 					.build());
+		}
+	}
+
+	//TODO: Maybe put this up
+
+	/**
+	 * Validates a JWT token.
+	 * <p>
+	 * This endpoint is used internally by the API Gateway to validate tokens.
+	 * </p>
+	 *
+	 * @param token The JWT token to validate
+	 * @return Success response if the token is valid
+	 */
+	@Operation(summary = "Validate token", description = "Validates a JWT token (internal use)")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Token is valid"),
+		@ApiResponse(responseCode = "401", description = "Token is invalid or expired")
+	})
+	@PostMapping("/validate-token")
+	public ResponseEntity<Void> validateToken(@RequestParam String token) {
+		try {
+			String username = jwtService.extractUsername(token);
+			if (username != null) {
+				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+				if (jwtService.isTokenValid(token, userDetails)) {
+					log.debug("Token validated successfully for user: {}", username);
+					return ResponseEntity.ok().build();
+				}
+			}
+			log.warn("Invalid token validation attempt");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		} catch (Exception e) {
+			log.error("Error validating token: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 	}
 
