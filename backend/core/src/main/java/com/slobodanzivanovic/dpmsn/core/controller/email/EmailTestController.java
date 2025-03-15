@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Controller for testing email functionality.
  */
@@ -38,13 +41,10 @@ public class EmailTestController {
 	public CustomResponse<Void> testEmail(@RequestParam String to) {
 		try {
 			String subject = "Test Email from DPMSN";
-			String htmlMessage = "<html><body>" +
-				"<h2>Test Email</h2>" +
-				"<p>This is a test email from your DPMSN application.</p>" +
-				"<p>If you received this, your email configuration is working correctly.</p>" +
-				"</body></html>";
 
-			emailService.sendVerificationEmail(to, subject, htmlMessage);
+			Map<String, Object> templateModel = new HashMap<>();
+
+			emailService.sendTemplatedEmail(to, subject, "test-email-template", templateModel);
 			log.info("Test email sent to: {}", to);
 			return CustomResponse.SUCCESS;
 		} catch (MessagingException e) {

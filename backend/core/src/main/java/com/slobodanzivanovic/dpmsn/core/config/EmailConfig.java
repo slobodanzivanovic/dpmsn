@@ -3,8 +3,12 @@ package com.slobodanzivanovic.dpmsn.core.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.util.Properties;
 
@@ -23,6 +27,26 @@ public class EmailConfig {
 
 	@Value("${core.mail.password}")
 	private String emailPassword;
+
+	// TODO: add docstring
+	@Bean
+	@Primary
+	public ITemplateResolver thymeleafTemplateResolver() {
+		ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+		templateResolver.setPrefix("templates/mail-templates/");
+		templateResolver.setSuffix(".html");
+		templateResolver.setTemplateMode("HTML");
+		templateResolver.setCharacterEncoding("UTF-8");
+		return templateResolver;
+	}
+
+	// TODO: add docstring
+	@Bean
+	public SpringTemplateEngine thymeleafTemplateEngine(ITemplateResolver templateResolver) {
+		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+		templateEngine.setTemplateResolver(templateResolver);
+		return templateEngine;
+	}
 
 	/**
 	 * Configures and provides a JavaMailSender instance.

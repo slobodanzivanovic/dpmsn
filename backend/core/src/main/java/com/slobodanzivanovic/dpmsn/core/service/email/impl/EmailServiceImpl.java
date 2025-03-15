@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+
+import java.util.Map;
 
 /**
  * Implementation of the EmailService interface.
@@ -21,6 +25,9 @@ public class EmailServiceImpl implements EmailService {
 
 	@Autowired
 	private JavaMailSender emailSender;
+
+	@Autowired
+	private SpringTemplateEngine thymeleafTemplateEngine;
 
 	@Value("${core.mail.username}")
 	private String fromEmail;
@@ -47,6 +54,16 @@ public class EmailServiceImpl implements EmailService {
 		helper.setText(text, true);
 
 		emailSender.send(message);
+	}
+
+	// TODO: add docstring
+	public void sendTemplatedEmail(String to, String subject, String templateName, Map<String, Object> templateModel) throws MessagingException {
+		Context thymeleafContext = new Context();
+		thymeleafContext.setVariables(templateModel);
+
+		String htmlContent = thymeleafTemplateEngine.process(templateName, thymeleafContext);
+
+		sendVerificationEmail(to, subject, htmlContent);
 	}
 
 }

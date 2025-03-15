@@ -34,6 +34,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -506,15 +507,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 */
 	private void sendVerificationEmail(UserEntity user) {
 		String subject = "Please verify your DPMSN account";
-		String htmlMessage = "<html><body>" +
-			"<h2>Welcome to DPMSN</h2>" +
-			"<p>Please use the following code to verify your email: <strong>" +
-			user.getVerificationCode() + "</strong></p>" +
-			"<p>This code will expire in 1 hour.</p>" +
-			"</body></html>";
 
 		try {
-			emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
+			Map<String, Object> templateModel = new HashMap<>();
+			templateModel.put("verificationCode", user.getVerificationCode());
+
+			emailService.sendTemplatedEmail(user.getEmail(), subject, "verification-email", templateModel);
 		} catch (MessagingException e) {
 			log.error("Failed to send verification email: {}", e.getMessage(), e);
 			throw new ExternalServiceException("Error sending verification email", e);
@@ -533,16 +531,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 */
 	private void sendPasswordResetEmail(UserEntity user) {
 		String subject = "DPMSN Password Reset";
-		String htmlMessage = "<html><body>" +
-			"<h2>Password Reset Request</h2>" +
-			"<p>Please use the following code to reset your password: <strong>" +
-			user.getVerificationCode() + "</strong></p>" +
-			"<p>This code will expire in 15 minutes.</p>" +
-			"<p>If you did not request this reset, please ignore this email.</p>" +
-			"</body></html>";
 
 		try {
-			emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
+			Map<String, Object> templateModel = new HashMap<>();
+			templateModel.put("verificationCode", user.getVerificationCode());
+
+			emailService.sendTemplatedEmail(user.getEmail(), subject, "password-reset", templateModel);
 		} catch (MessagingException e) {
 			log.error("Failed to send password reset email: {}", e.getMessage(), e);
 			throw new ExternalServiceException("Error sending password reset email", e);
